@@ -1,0 +1,11 @@
+# Secondary protection only: onboarding must never write personal data into this checkout.
+__pycache__/
+*.pyc
+.env
+.env.*
+.obsidian/
+.vscode/
+.idea/
+*.swp
+.DS_Store
+.cache/

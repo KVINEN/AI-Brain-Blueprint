@@ -1,0 +1,53 @@
+filters:
+  or:
+    - type == "spec"
+    - type == "task"
+views:
+  - type: table
+    name: Active specs
+    filters:
+      and:
+        - type == "spec"
+        - status != "done"
+    groupBy:
+      property: status
+      direction: ASC
+    order:
+      - file.name
+      - project
+      - status
+      - builder
+      - branch
+      - blocked_reason
+      - updated
+  - type: table
+    name: Specs by project
+    filters:
+      and:
+        - type == "spec"
+        - file.hasLink(this.file)
+    order:
+      - file.name
+      - status
+      - builder
+      - updated
+  - type: table
+    name: Done
+    filters:
+      and:
+        - type == "spec"
+        - status == "done"
+    order:
+      - file.name
+      - project
+      - updated
+  - type: table
+    name: Tasks
+    filters:
+      and:
+        - type == "task"
+        - status != "specced"
+    order:
+      - file.name
+      - project
+      - status
