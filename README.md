@@ -22,16 +22,43 @@ A fictional example, project "recipe-box":
 One agent can do both jobs. Keep the steps separate: write and approve the spec first, build second, review as a fresh step.
 
 ## Layout
-```
-README.md  docs/privacy.md  scripts/check_public.py  tests/   public repo tooling
+```text
+README.md                    # public repo tooling
+docs/
+└── privacy.md               # public repo tooling
+scripts/
+└── check_public.py          # public repo tooling
+tests/                       # public repo tooling
 .agents/skills/
-  brain-setup/    onboarding interview (this repo only)
-  brain-capture/  brain-spec/  brain-build/  brain-review/   copied into your vault
-vault/            the generic skeleton that setup copies
-  AGENTS.md  CLAUDE.md  Home.md  Board.base
-  Identity/{user,soul,identity}.md
-  Templates/{project,spec,task,decision,knowledge,source,moc}.md
-  Projects/ Decisions/ Knowledge/Sources/ MOCs/ Inbox/ Tasks/
+├── brain-setup/             # onboarding interview (this repo only)
+├── brain-capture/           # copied into your vault
+├── brain-spec/              # copied into your vault
+├── brain-build/             # copied into your vault
+└── brain-review/            # copied into your vault
+vault/                       # generic skeleton that setup copies
+├── AGENTS.md
+├── CLAUDE.md
+├── Home.md
+├── Board.base
+├── Identity/
+│   ├── user.md
+│   ├── soul.md
+│   └── identity.md
+├── Templates/
+│   ├── project.md
+│   ├── spec.md
+│   ├── task.md
+│   ├── decision.md
+│   ├── knowledge.md
+│   ├── source.md
+│   └── moc.md
+├── Projects/
+├── Decisions/
+├── Knowledge/
+│   └── Sources/
+├── MOCs/
+├── Inbox/
+└── Tasks/
 ```
 
 ## Prerequisites
