@@ -41,10 +41,11 @@ cd blueprint-public
 git init -q -b main
 git config user.name  "<public commit name you choose>"    # repository-local only
 git config user.email "<public commit email you choose>"
-python3 scripts/check_public.py --denylist <your-denylist>
+git add -A                                                  # stage first: an empty index would pass trivially
+python3 scripts/check_public.py --denylist <your-denylist>            # disk check, must print OK
+python3 scripts/check_public.py --staged --denylist <your-denylist>   # index check, must print OK
 python3 -m unittest discover -s tests
-git add -A && git commit -m "Initial public release"
-python3 scripts/check_public.py --staged --denylist <your-denylist>
+git commit -m "Initial public release"                     # only if every check above passed
 git log --all --format='%an %ae %cn %ce'                   # confirm only the public identity appears
 ```
-Only then add a remote and push, deliberately and by hand. `git archive` exports tracked files only and no history, hooks or local configuration. Review the exported tree once more before pushing; also check the hosting account's default commit-email privacy setting.
+If any check fails, fix the files, `git add -A` again and rerun both checks before committing. Only then add a remote and push, deliberately and by hand. `git archive` exports tracked files only and no history, hooks or local configuration. Review the exported tree once more before pushing; also check the hosting account's default commit-email privacy setting.

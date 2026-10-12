@@ -5,6 +5,7 @@ status: draft
 architect:
 builder:
 branch:
+base:
 created: {{date:YYYY-MM-DD}}
 updated: {{date:YYYY-MM-DD}}
 round: 0

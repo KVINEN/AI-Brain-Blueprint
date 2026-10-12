@@ -76,6 +76,27 @@ class ForbiddenFiles(Fixture):
         self.add(".")
         self.assertIn(("vault_link.md", "symlink"), self.rules())
 
+    def test_indexed_file_replaced_by_symlink_rejected_on_disk(self):
+        self.write("README.md", CLEAN)
+        self.add(".")
+        outside = self.write("../" + os.path.basename(self.repo) + "-target.md", CLEAN)
+        self.addCleanup(os.remove, outside)
+        os.remove(os.path.join(self.repo, "README.md"))
+        os.symlink(outside, os.path.join(self.repo, "README.md"))
+        self.assertIn(("README.md", "symlink"), self.rules())
+        self.assertEqual(self.rules(staged=True), set())
+
+    def test_symlinked_tracked_directory_rejected_on_disk(self):
+        self.write("docs/privacy.md", CLEAN)
+        self.add(".")
+        outside = tempfile.TemporaryDirectory()
+        self.addCleanup(outside.cleanup)
+        with open(os.path.join(outside.name, "privacy.md"), "w") as fh:
+            fh.write(CLEAN)
+        os.rename(os.path.join(self.repo, "docs"), os.path.join(self.repo, "docs-moved"))
+        os.symlink(outside.name, os.path.join(self.repo, "docs"))
+        self.assertIn(("docs/privacy.md", "symlink"), self.rules())
+
     def test_binary_rejected(self):
         self.write("README.md", b"abc\x00def", binary=True)
         self.add(".")

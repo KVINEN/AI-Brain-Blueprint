@@ -80,6 +80,15 @@ def read_content(repo, path, staged):
         return fh.read()
 
 
+def fs_symlink(repo, path):
+    """True if the path or any parent directory below the repo root is a symlink on disk."""
+    parts = path.split("/")
+    for i in range(1, len(parts) + 1):
+        if os.path.islink(os.path.join(repo, *parts[:i])):
+            return True
+    return False
+
+
 def path_allowed(path):
     return path in ALLOWED_EXACT or any(p.match(path) for p in ALLOWED_PATTERNS)
 
@@ -96,7 +105,7 @@ def check(repo, staged=False, denylist=()):
     """Return a sorted list of (path, line, rule) violations."""
     violations = []
     for mode, path in list_entries(repo, staged):
-        if mode == "120000":
+        if mode == "120000" or (not staged and fs_symlink(repo, path)):
             violations.append((path, 0, "symlink"))
             continue
         if not path_allowed(path):

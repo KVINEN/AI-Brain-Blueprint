@@ -7,7 +7,7 @@ description: Architect role. Review a built spec against its acceptance criteria
 All vault paths are relative to the vault root (the folder containing `AGENTS.md`). If one agent built the spec, review it in a fresh session or as an explicit separate step, judging the result as if someone else wrote it.
 
 1. Pick the spec the owner named, otherwise the oldest `status: review` spec in `Projects/*/specs/`.
-2. Read the spec (criteria, build log). The project note names the code repository; read the diff with `git -C <repo> diff <base>...spec/<slug>`.
+2. Read the spec (criteria, build log). The project note names the code repository; read the diff with `git -C <repo> diff <base>...spec/<slug>`, where `<base>` is the spec's `base:` field recorded by the builder. If `base:` is empty (older spec), ask the owner which branch the work started from rather than guessing.
 3. Judge against the **spec**, not taste. Check every acceptance criterion, then look for correctness bugs, security issues and over-engineering (code beyond the spec counts as a defect).
 4. Run the verification yourself where it is cheap (lint, typecheck, tests).
 5. Append `## Review` with today's date, a verdict (`pass` or `changes requested`) and specific findings (`file:line`, what is wrong, why). Increment `round` by one.

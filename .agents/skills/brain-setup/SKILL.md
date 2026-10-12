@@ -36,11 +36,19 @@ Resolve with symlinks followed (for example `realpath -m`). Apply every check to
 Show a summary table: each answer on the left, the file and section it lands in on the right (mapping below), the resolved destination, and the list of files to be created. State that nothing is written to this checkout. Ask for explicit confirmation ("yes, create it"). Anything else means revise or stop.
 
 ## 4. Write the vault
-Copy only this allowlist from the checkout into the destination, then fill it in:
-- everything under `vault/` (mapped to the destination root, keeping `.gitkeep` files),
-- `.agents/skills/brain-capture`, `brain-spec`, `brain-build`, `brain-review` into `<destination>/.agents/skills/`.
+Copy **only these exact files** from the checkout into the destination (create parent directories as needed), then fill them in. Do not copy directories recursively and do not glob: anything not listed here is never copied, even if it sits in the same folder.
 
-Never copy `.git`, logs, caches, `.env*`, editor workspace state, `tests/`, `scripts/`, `docs/`, or `brain-setup` itself.
+From `vault/` to the destination root (20 files):
+- `AGENTS.md`, `CLAUDE.md`, `Home.md`, `Board.base`
+- `Identity/user.md`, `Identity/soul.md`, `Identity/identity.md`
+- `Templates/project.md`, `Templates/spec.md`, `Templates/task.md`, `Templates/decision.md`, `Templates/knowledge.md`, `Templates/source.md`, `Templates/moc.md`
+- `Projects/.gitkeep`, `Decisions/.gitkeep`, `Knowledge/Sources/.gitkeep`, `MOCs/.gitkeep`, `Inbox/.gitkeep`, `Tasks/.gitkeep`
+
+From `.agents/skills/` to `<destination>/.agents/skills/` (4 files): `brain-capture/SKILL.md`, `brain-spec/SKILL.md`, `brain-build/SKILL.md`, `brain-review/SKILL.md`.
+
+Before copying, check each source with a no-follow test (for example `test -f F && ! test -L F`, and that no parent directory below the checkout root is a symlink). If a source is missing, is not a regular file or is a symlink, stop and report it; do not substitute. Copy file contents only, never links. Afterwards the destination must contain exactly the files above plus the notes you generate (project notes and their `specs/.gitkeep`); list any other file found there and ask before leaving it.
+
+Never copy `.git`, logs, caches, `.env*`, editor workspace state, `tests/`, `scripts/`, `docs/`, `brain-setup` itself, or any untracked or extra file that happens to sit under `vault/` or the skill directories.
 
 ### Answer-to-file mapping
 | Answer | File | Where |
@@ -55,7 +63,7 @@ Never copy `.git`, logs, caches, `.env*`, editor workspace state, `tests/`, `scr
 | Action approval | `Identity/identity.md` and `AGENTS.md` | "Actions needing approval" / Configuration |
 | Note language | `AGENTS.md` and `Identity/soul.md` | Configuration → Language; add "Write notes in <language>" |
 | Projects | `Projects/<slug>/<slug>.md` + `Projects/<slug>/specs/.gitkeep` | from `Templates/project.md`: What/Why from the purpose, `repo:` and **Repo:** from the path (else leave `repo:` empty and write "none yet") |
-| Project list | `Home.md` | one `[[<slug>]]` bullet per project under Projects |
+| Project list | `Home.md` | one `[[<slug>]]` bullet per project under Projects, replacing the `_None yet._` bullet (keep it when no project was given) |
 | Editor, machines, git preference | `Home.md` | a short "Setup choices" section (editor, local-only or private git) with no machine names |
 
 Then in the destination: replace every line starting `> Status: **unconfigured**` (in `AGENTS.md`, `Home.md` and the `Identity/` notes) with `Status: configured by brain-setup`; skipped fields keep `_unconfigured_`. If the single agent plays both roles, say so in `AGENTS.md` Roles. Do not add a transcript of the interview anywhere, and do not store the destination path inside the vault.
