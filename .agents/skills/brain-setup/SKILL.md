@@ -42,7 +42,7 @@ From `vault/` to the destination root (20 files):
 - `AGENTS.md`, `CLAUDE.md`, `Home.md`, `Board.base`
 - `Identity/user.md`, `Identity/soul.md`, `Identity/identity.md`
 - `Templates/project.md`, `Templates/spec.md`, `Templates/task.md`, `Templates/decision.md`, `Templates/knowledge.md`, `Templates/source.md`, `Templates/moc.md`
-- `Projects/.gitkeep`, `Decisions/.gitkeep`, `Knowledge/Sources/.gitkeep`, `MOCs/.gitkeep`, `Inbox/.gitkeep`, `Tasks/.gitkeep`
+- `Projects/.gitkeep`, `Decisions/.gitkeep`, `Knowledge/Sources/.gitkeep`, `MOCs/.gitkeep`, `Inbox/.gitkeep`, `TODO/.gitkeep`
 
 From `.agents/skills/` to `<destination>/.agents/skills/` (4 files): `brain-capture/SKILL.md`, `brain-spec/SKILL.md`, `brain-build/SKILL.md`, `brain-review/SKILL.md`.
 
@@ -71,9 +71,12 @@ Then in the destination: replace every line starting `> Status: **unconfigured**
 Finish by listing the files created and the next step: open the new vault in an agent and say "read AGENTS.md, then capture my first request".
 
 ## 5. Rerun
-If the destination already holds an earlier vault: do **not** overwrite anything silently. Re-ask only what the user wants to change, then show a preview of exactly which lines or files would change (old → new) plus new files to add. Apply only the approved changes; never touch notes under `Projects/*/specs/`, `Decisions/`, `Knowledge/`, `Inbox/` or `Tasks/` beyond adding a requested new project note. If a project note already exists, show a diff and ask per file.
+If the destination already holds an earlier vault: do **not** overwrite anything silently. Re-ask only what the user wants to change, then show a preview of exactly which lines or files would change (old → new) plus new files to add. Apply only the approved changes; never touch notes under `Projects/*/specs/`, `Decisions/`, `Knowledge/`, `Inbox/` or `TODO/`, legacy `Tasks/` or `Completed tasks/` beyond adding a requested new project note. If a project note already exists, show a diff and ask per file.
+
+### Legacy queue migration (separate approved preview)
+Fresh vaults have `TODO/`, not `Tasks/`. On a rerun, leave existing `Tasks/` notes untouched. Offer a separate preview only if the user requests migration: list each source/destination, reciprocal `task:`/`spec:` pointers and working links that need updating. Preserve every unfinished body, status, importance, retry field and review history. Reject duplicate destinations or ambiguous identities without overwriting. Never classify a task as completed merely because it has a spec, and never retire tasks during setup. Apply a migration only after explicit approval of that concrete preview; otherwise keep the legacy requests visible on the board. Do not create a fresh `Completed tasks/` placeholder; the reviewer creates it only for an actual archive fallback.
 
 ## After setup (the user does these, you only explain)
 - **Git (optional):** `git init` inside the vault, commit, and add a *private* remote only if wanted. Keep it private; never push a vault to a public remote.
-- **Obsidian (optional):** open the vault folder as a vault; `Board.base` shows specs and tasks by status.
+- **Obsidian (optional):** open the vault folder as a vault; `Board.base` offers lifecycle and importance tables plus spec status/project views; no Kanban plugin is required.
 - **Skills:** the skills are plain files in `<vault>/.agents/skills/`. If an agent does not pick them up on its own, tell it to read `.agents/skills/<name>/SKILL.md` and follow it. How a given client discovers skills varies and is not guaranteed.

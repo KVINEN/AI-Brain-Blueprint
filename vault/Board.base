@@ -2,7 +2,42 @@ filters:
   or:
     - type == "spec"
     - type == "task"
+formulas:
+  lifecycle: if(stage == "backlog" || task_stage == "backlog", "1 Backlog", if(stage == "next" || task_stage == "next", "2 Next", if(stage == "in-progress" || task_stage == "in-progress", "3 In progress", if(stage == "done" || task_stage == "done", "4 Done", if(type == "task", "1 Backlog", "?")))))
+  importance_rank: if(importance == "critical", 0, if(importance == "high", 1, if(importance == "low", 3, 2)))
 views:
+  - type: table
+    name: Lifecycle
+    filters:
+      or:
+        - and:
+            - type == "task"
+            - status != "specced"
+            - status != "done"
+            - '!file.inFolder("Completed tasks")'
+        - and:
+            - type == "spec"
+            - formula.lifecycle != "?"
+    groupBy:
+      property: formula.lifecycle
+      direction: ASC
+    order:
+      - file.name
+      - importance
+      - status
+      - project
+      - round
+      - blocked_reason
+      - retry_after
+      - task_completed_at
+    sort:
+      - property: formula.importance_rank
+        direction: ASC
+      - property: file.name
+        direction: ASC
+    columnSize:
+      file.name: 343
+      note.blocked_reason: 779
   - type: table
     name: Active specs
     filters:
@@ -18,8 +53,20 @@ views:
       - status
       - builder
       - branch
+      - round
       - blocked_reason
+      - retry_after
       - updated
+    sort: []
+    columnSize:
+      file.name: 354
+      note.project: 136
+      note.status: 85
+      note.builder: 107
+      note.branch: 84
+      note.round: 69
+      note.blocked_reason: 135
+      note.retry_after: 137
   - type: table
     name: Specs by project
     filters:
@@ -47,7 +94,13 @@ views:
       and:
         - type == "task"
         - status != "specced"
+        - status != "done"
+        - '!file.inFolder("Completed tasks")'
     order:
       - file.name
+      - importance
+      - stage
       - project
       - status
+      - blocked_reason
+      - retry_after

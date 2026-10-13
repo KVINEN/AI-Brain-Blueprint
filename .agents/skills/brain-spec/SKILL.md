@@ -19,5 +19,8 @@ All paths are relative to the vault root (the folder containing `AGENTS.md`). Th
    - `manual`: `status: proposed`. **Stop.** Show the owner the spec; only the owner moves it to `ready`.
    - `auto`: `status: ready`.
    - Open questions remain: `status: draft`, with the questions under `## Questions`.
-7. If the spec came from a `Tasks/` note, set that task to `status: specced` and add `spec: <path>`.
-8. Reply with the spec path and a three-line summary. For `proposed`, say what the owner must do to approve it (set `status: ready`).
+7. If the spec came from a `TODO/` note, set that task to `status: specced` and add `spec: <path>`.
+   - Keep the task's `stage: in-progress` from specification start; set reciprocal `task: <path>`, `importance` (default normal), `task_stage: in-progress`, and `round: 0` on the spec. Quote the task's full latest body and custom context under `## Original task`; record initial observed importance with a UTC date under `## Dispatch history`. Keep this request snapshot exact, including headings/comments/links.
+   - Leave proposed/draft/blocked work unfinished and visible. A specced task is represented by its spec in Lifecycle; do not remove it.
+8. When selecting unspecified work, use review → ready build → requested intake, then importance (`critical`, `high`, `normal`, `low`), filename date and relative path. A future-dated intake waits until its UTC date; never interrupt a claim to change priority.
+9. Reply with the spec path and a three-line summary. For `proposed`, say what the owner must do to approve it (set `status: ready`).
