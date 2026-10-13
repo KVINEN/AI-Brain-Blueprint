@@ -13,13 +13,31 @@ People who work with one or two coding agents across several projects and want d
 ## The lifecycle: capture → spec → build → review
 A fictional example, project "recipe-box":
 
-1. **Capture.** You tell the agent: "capture a request: add a shopping-list export to recipe-box". `brain-capture` writes `Tasks/2026-01-05-shopping-export.md` (`status: requested`).
+1. **Capture.** You tell the agent: "capture a request: add a shopping-list export to recipe-box". `brain-capture` writes `TODO/2026-01-05-shopping-export.md` (`status: requested`, `importance: normal`, `stage: backlog`).
 2. **Spec.** The architect agent runs `brain-spec`. It reads the project note, inspects the code repository the note points to, and writes `Projects/recipe-box/specs/2026-01-05-shopping-export.md` with goal, approach and checkable acceptance criteria. With **manual** approval it sets `status: proposed` and stops; you read the spec and change it to `ready`. (With `auto` approval it writes `ready` itself.)
-3. **Build.** The builder runs `brain-build`: it claims the spec (`building`, its name, `branch: spec/shopping-export`) before coding, works on that branch in the code repository, ticks tasks, verifies the criteria, appends to `## Build log` and sets `review`.
+3. **Build.** The builder runs `brain-build`: it claims the spec (`building`, its name, `branch: spec/shopping-export`, `task_stage: in-progress`) before coding, works on that branch in the code repository, ticks tasks, verifies the criteria, appends to `## Build log` and sets `review`.
 4. **Review.** The architect runs `brain-review` against the spec and the branch diff. `pass` sets `done`; `changes requested` adds tasks and sets `ready` again (at most 3 rounds).
-5. **Merge.** Only you merge `spec/shopping-export`. No agent merges, pushes to shared branches or enables services.
+5. **Retain and tidy.** After a completed passing review, retain the latest exact request/context and importance history in its spec, stamp UTC completion, then mark the task done. Prefer removing the redundant task after repairing working links; use `Completed tasks/` only if an anchor/embed or context needs the original. Unfinished, blocked or waiting requests remain visible. These are explicit reviewer steps, not automatic cleanup.
+6. **Merge.** Only you merge `spec/shopping-export`. No agent merges, pushes to shared branches or enables services.
 
 One agent can do both jobs. Keep the steps separate: write and approve the spec first, build second, review as a fresh step.
+
+## Priorities and lifecycle
+Importance is `critical`, `high`, `normal` (default for missing/blank values), or `low`. Finish reviews first, then ready builds, then requested intake; within a phase use importance, filename date, then relative path. Future-dated requests wait until their UTC day. Choose this order manually; changing priority never interrupts a running claim.
+
+Task `stage` and spec `task_stage` are `backlog`, `next`, `in-progress`, `done`. Use next only for a real next-session reservation, in-progress when specification starts, and done only after required review verification finishes. Approval questions, fix rounds, blocked and waiting work keep their unfinished stage. The reviewer retains `## Original task`, observed importance and completion in `## Dispatch history`, and actual UTC `task_completed_at`. Done records acceptance; code still awaits your merge. Legacy `Tasks/` migration needs an explicitly approved preview; setup reruns never silently move existing notes.
+
+## Skills
+
+| Skill | Purpose | Where it runs |
+|---|---|---|
+| [brain-setup](.agents/skills/brain-setup/SKILL.md) | Interview and create a separate private vault; preview reruns | This repository only |
+| [brain-capture](.agents/skills/brain-capture/SKILL.md) | File decisions, lessons, ideas and TODO requests | Copied into the private vault |
+| [brain-spec](.agents/skills/brain-spec/SKILL.md) | Design a request with criteria and respect manual or auto approval | Copied into the private vault |
+| [brain-build](.agents/skills/brain-build/SKILL.md) | Claim an approved spec, implement it on a branch and record checks | Copied into the private vault |
+| [brain-review](.agents/skills/brain-review/SKILL.md) | Verify a build, retain completed requests and prescribe fixes | Copied into the private vault |
+
+These five skills are the shipped inventory. Dispatch, sync and automatic cleanup are optional external tooling and are not bundled.
 
 ## Layout
 ```text
@@ -58,7 +76,7 @@ vault/                       # generic skeleton that setup copies
 │   └── Sources/
 ├── MOCs/
 ├── Inbox/
-└── Tasks/
+└── TODO/
 ```
 
 ## Prerequisites
@@ -78,8 +96,8 @@ Setup refuses destinations inside this checkout (or its worktrees), through syml
 ## Using the vault
 - **Each session:** tell the agent to read `AGENTS.md` and the three `Identity/` notes. The vault's `CLAUDE.md` simply imports `AGENTS.md` for tools that look for that name.
 - **Skills** are plain instruction files in `<vault>/.agents/skills/<name>/SKILL.md`. Some clients discover them automatically; this blueprint does not promise that. Otherwise say "read `.agents/skills/brain-spec/SKILL.md` and follow it".
-- **Board:** `Board.base` (Obsidian Bases) lists specs by status and open tasks.
-- **Spec statuses:** `draft` (open question), `proposed` (awaiting your approval), `ready`, `building`, `review`, `done`, `blocked` (needs you; `blocked_reason` says why).
+- **Board:** `Board.base` (optional Obsidian Bases) groups requests by lifecycle and importance and lists specs by status/project. No Kanban plugin is required or included. A specced request is represented by its spec; Done has one spec row, with archives excluded from pending views.
+- **Spec statuses:** `draft` (open question), `proposed` (awaiting your approval), `ready`, `building`, `review`, `done`, `blocked` (needs you; `blocked_reason` says why), and `waiting` (human rechecks `retry_after`/`resume_status`; no timer is shipped).
 - No sync tooling is included. If you version your vault with git, commit when you like.
 
 ## Optional tooling (you do these yourself)

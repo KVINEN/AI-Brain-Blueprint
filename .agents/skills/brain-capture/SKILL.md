@@ -16,6 +16,8 @@ All paths are relative to the vault root (the folder containing `AGENTS.md`).
    | A request for work | `Tasks/YYYY-MM-DD-<slug>.md` (template `Templates/task.md`) |
    | Unclear or half-formed | `Inbox/YYYY-MM-DD-<slug>.md`, a few lines |
 
+For a work request, use `Templates/task.md`: `status: requested`, `importance: normal`, `stage: backlog`; the owner may choose `critical`, `high`, `normal` or `low`. Capture is manual; ask the architect to spec it rather than claiming automatic pickup.
+
 2. **Search first** (for example `grep -ril "<term>" . --include=*.md`). Extend an existing note instead of creating a near-duplicate.
 3. Knowledge notes teach: explain the idea so the owner understands it a year from now without context. Lead with a one-line summary, add gotchas and "Seen in" links.
 4. Add `[[links]]` to the project, related concepts and sources, and a backlink from the project note's Decisions or Lessons list.

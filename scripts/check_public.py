@@ -17,7 +17,7 @@ import sys
 
 SKILLS = ("brain-setup", "brain-capture", "brain-spec", "brain-build", "brain-review")
 TEMPLATES = ("project", "spec", "task", "decision", "knowledge", "source", "moc")
-EMPTY_DIRS = ("Projects", "Decisions", "Knowledge/Sources", "MOCs", "Inbox", "Tasks")
+EMPTY_DIRS = ("Projects", "Decisions", "Knowledge/Sources", "MOCs", "Inbox", "TODO")
 
 ALLOWED_EXACT = {
     "README.md",

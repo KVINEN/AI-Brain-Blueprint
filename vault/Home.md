@@ -10,7 +10,7 @@
 - _None yet._ Add one note per project under `Projects/<project>/<project>.md`.
 
 ## Next up
-- _Nothing yet._ Capture a request in `Tasks/` or `Inbox/`.
+- _Nothing yet._ Capture a request in `TODO/` or `Inbox/`.
 
 ## Board
 ![[Board.base]]

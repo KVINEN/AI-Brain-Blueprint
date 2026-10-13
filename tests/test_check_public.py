@@ -45,7 +45,7 @@ class AllowedContent(Fixture):
         self.write("README.md", CLEAN)
         self.write("vault/Home.md", CLEAN)
         self.write(".agents/skills/brain-spec/SKILL.md", CLEAN)
-        self.write("vault/Tasks/.gitkeep", "")
+        self.write("vault/TODO/.gitkeep", "")
         self.add(".")
         self.assertEqual(cp.check(self.repo), [])
 

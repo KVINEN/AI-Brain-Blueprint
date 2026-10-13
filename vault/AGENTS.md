@@ -44,14 +44,32 @@ request ─► proposed ─► ready ─► building ─► review ─┬─► 
 - Build on a branch `spec/<slug>` in the code repository (use a git worktree if another agent works there too).
 - **Never merge.** When a review passes, the spec becomes `done` and the human merges the branch.
 - `draft` means an agent has a question under `## Questions`; `blocked` means it cannot continue (give `blocked_reason`).
-- `Board.base` lists specs and tasks by status.
+- `Board.base` lists unfinished requests by lifecycle and importance, plus specs by status/project.
+
+## Priorities and lifecycle (manual)
+
+Pending requests live in `TODO/`. Keep legacy `Tasks/` requests visible until an explicitly approved migration; archive `Completed tasks/` is never a pending queue. Importance is `critical | high | normal | low`, default normal when missing or blank. Choose work by phase first: review, then ready build, then requested intake. Within a phase use importance, filename date, then relative path. A future-dated request waits until that UTC day. A priority edit never interrupts a running claim.
+
+Task `stage` and spec `task_stage` describe the whole request: `backlog`, `next`, `in-progress`, `done`. You or the architect set `next` only when reserving that specific request for the next session; clear an unused reservation back to backlog. Specification starts in-progress. Proposed/draft questions, fixes, blocked and waiting work remain in-progress once started, or backlog if never started. Waiting means an explicitly recorded `resume_status` and UTC `retry_after`; the human rechecks the deadline/blocker before restoring that status. No timer resumes it here.
+
+Once specced, the spec is the request's lifecycle row; keep the pending task as context. `Board.base` offers Bases tables grouped by lifecycle/status, with importance ordering. Done contains specs only. Obsidian Bases is optional; no Kanban plugin is required or shipped. Without Obsidian, inspect frontmatter using the same selection order.
+
+## Completion and retained requests (manual)
+
+Only a passing review with all required verification finished sets spec `status: done`, `task_stage: done`, and a real UTC `task_completed_at`. A failed, timed-out or interrupted review completes nothing. Done is acceptance, not a merge claim: the human still merges code.
+
+Before completing the task, preserve its latest exact body and custom context fields under the spec's `## Original task` (quote each line so embedded headings/comments cannot become spec sections), copy importance and record observed changes and completion under `## Dispatch history`. Keep both sections as provenance; never rewrite their copied links. Then mark the live task `status: done`, `stage: done`.
+
+Prefer removing the redundant completed task after ordinary working links have been retargeted to its retained spec with labels preserved. Keep the historical `task:` source pointer. If a working anchor/embed needs the original note or context cannot transfer safely, create `Completed tasks/` on demand, move the unchanged task body there with done metadata, update working links and the spec's `task:`, and record the archive reason. Never overwrite an archive collision. If a link cannot be safely understood/repaired, keep the task and report what needs attention. Leave code examples unchanged. Do not remove unresolved work merely because it has a spec.
+
+The reviewer performs this bookkeeping explicitly; this blueprint ships no dispatcher, automatic task cleanup, sync script or timer. Setup reruns preview differences; migration of existing requests needs a separate approved preview.
 
 ## Writing rules
 
 - **Stay in your sections.** Do not rewrite another agent's spec body, build log or review. Append below it or add a note under `## Questions`.
 - **Frontmatter is the API.** Every note has a `type` (`project | spec | task | decision | knowledge | source | moc`). Keep the fields from `Templates/`.
 - **Link generously** with `[[wikilinks]]`. A concept mentioned twice deserves a `Knowledge/` note.
-- **Don't delete.** Superseded decisions get `status: superseded` and a link to the replacement.
+- **Don't delete.** Superseded decisions get `status: superseded` and a link to the replacement. Narrow exception: after a verified passing review and exact retention, the reviewer may remove a redundant completed task as described above; archive when the original is needed. Never remove pending or unresolved work.
 - **Concise, no filler.** Notes are for the future owner and future agents: what, why, and where it lives.
 - **No secrets.** No API keys, tokens, passwords or `.env` contents. Ever.
 - **Sources stay where they are.** Keep large files outside the vault; a `Knowledge/Sources/` note holds the distilled summary and points to the file.
@@ -78,6 +96,6 @@ Decisions/     YYYY-MM-DD-<slug>.md
 Knowledge/     reusable concepts; Sources/ holds distilled source notes
 MOCs/          maps of content, once a topic exceeds ~8 notes
 Inbox/         quick captures
-Tasks/         manual requests (status: requested)
+TODO/          pending manual requests (status: requested)
 Templates/     note templates
 ```

@@ -21,7 +21,7 @@ VAULT_FILES = (
     ["AGENTS.md", "CLAUDE.md", "Home.md", "Board.base"]
     + [f"Identity/{n}.md" for n in ("user", "soul", "identity")]
     + [f"Templates/{n}.md" for n in ("project", "spec", "task", "decision", "knowledge", "source", "moc")]
-    + [f"{d}/.gitkeep" for d in ("Projects", "Decisions", "Knowledge/Sources", "MOCs", "Inbox", "Tasks")]
+    + [f"{d}/.gitkeep" for d in ("Projects", "Decisions", "Knowledge/Sources", "MOCs", "Inbox", "TODO")]
 )
 SKILL_FILES = [f".agents/skills/brain-{n}/SKILL.md" for n in ("capture", "spec", "build", "review")]
 

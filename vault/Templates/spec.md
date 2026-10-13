@@ -9,6 +9,10 @@ base:
 created: {{date:YYYY-MM-DD}}
 updated: {{date:YYYY-MM-DD}}
 round: 0
+task:
+importance: normal
+task_stage: in-progress
+task_completed_at:
 ---
 # <Spec title>
 
@@ -30,6 +34,12 @@ The intended design, in brief. Name what is deliberately out of scope.
 
 ## Questions
 <!-- Builder asks here; architect answers inline. -->
+
+## Original task
+<!-- For a task-backed spec, quote the latest request verbatim (including custom context fields). The review skill updates this snapshot before retiring the request. -->
+
+## Dispatch history
+<!-- Manual bookkeeping: dated observed importance changes and actual completion; no dispatcher is shipped. -->
 
 ## Build log
 <!-- Builder: what was built, commits, verification, surprises, one-line "why" for non-obvious choices. -->
